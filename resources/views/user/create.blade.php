@@ -101,7 +101,9 @@
                 },
                 function(isConfirm){
                     if (isConfirm) {
-                        getUsers(1);
+                        if (result['icon'] == 'success'){
+                            getUsers(1);
+                        }
                     }
                 });
             },

@@ -87,7 +87,9 @@
                 },
                 function(isConfirm){
                     if (isConfirm) {
-                        getCategories(1);
+                        if (result['icon'] == 'success'){
+                            getCategories(1);
+                        }
                     }
                 });
             },

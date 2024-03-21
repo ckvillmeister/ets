@@ -47,7 +47,9 @@
                 },
                 function(isConfirm){
                     if (isConfirm) {
-                        getPermissions(1);
+                        if (result['icon'] == 'success'){
+                            getPermissions(1);
+                        }
                     }
                 });
             },

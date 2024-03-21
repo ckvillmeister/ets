@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth as Authentication;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\File;
+use App\Models\Attachments;
 
 class FileController extends Controller
 {
@@ -42,7 +44,7 @@ class FileController extends Controller
         File::create([
             'filename' => $filename.'.'.$extension,
             'type' => $extension,
-            'created_by' => Auth::id(),
+            'created_by' => Authentication::id(),
             'created_at' => date('Y-m-d H:i:s')
         ]);
         Storage::disk('local')->putFileAs('/', $request->fileuploader, $filename.'.'.$extension);
@@ -51,6 +53,17 @@ class FileController extends Controller
     function toggleStatus(Request $request){
         $id = $request->input('id');
         $status = $request->input('status');
+
+        if (!$status):
+            $results = Attachments::where('file_id', $id)->get();
+
+            if (count($results)):
+                return ['icon'=>'error', 
+                            'title'=>'Error',
+                            'message'=>"Unable to delete! Uploaded scanned file is currently attached to a document."];
+            endif;
+        endif;
+
         File::where('id', $id)->update(['status' => $status]);
         return ($status) ? ['icon'=>'success','title'=>'Success','message'=>"File successfully restored!"] : ['icon'=>'success','title'=>'Success','message'=>"File successfully deleted!"];
     }

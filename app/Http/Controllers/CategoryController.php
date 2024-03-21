@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\Document;
 
 class CategoryController extends Controller
 {
@@ -41,16 +44,24 @@ class CategoryController extends Controller
             Category::where('id', $id)->update(['category' => $request->input('category'),
                                                     'is_with_series_no' => $seriesno,
                                                     'is_with_sender' => $sender,
-                                                    'is_with_receiver' => $recipient
+                                                    'is_with_receiver' => $recipient,
+                                                    'updated_by' => Auth::id(),
+                                                    'updated_at' => date('Y-m-d H:i:s')
                                                 ]);
             return ['icon'=>'success',
                     'title'=>'Success',
                     'message'=>"Category successfully updated!"];
         }
         else{
-            $request->validate([
+            $validator = Validator::make($request->all(), [
                 'category' => 'required|unique:category,category'
             ]);
+
+            if ($validator->fails()){
+                return ['icon'=>'error',
+                    'title'=>'Error',
+                    'message'=> $validator->errors()->first('category')];
+            }
     
             Category::create($request->all());
             return ['icon'=>'success',
@@ -63,15 +74,15 @@ class CategoryController extends Controller
         $id = $request->input('id');
         $status = $request->input('status');
 
-        // if (!$status):
-        //     $results = Category::where('permission_id', $id)->get();
+        if (!$status):
+            $results = Document::where('category', $id)->get();
 
-        //     if (count($results)):
-        //         return ['icon'=>'error', 
-        //                     'title'=>'Error',
-        //                     'message'=>"Unable to delete! Permission is currently associated to a role."];
-        //     endif;
-        // endif;
+            if (count($results)):
+                return ['icon'=>'error', 
+                            'title'=>'Error',
+                            'message'=>"Unable to delete! Category is currently associated to a document!"];
+            endif;
+        endif;
 
         Category::where('id', $id)->update(['status' => $status]);
         return ($status) ? ['icon'=>'success','title'=>'Success','message'=>"Category successfully re-activated!"] : ['icon'=>'success','title'=>'Success','message'=>"Category successfully deleted!"];

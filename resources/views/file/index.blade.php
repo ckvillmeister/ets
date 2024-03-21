@@ -175,7 +175,21 @@
             data: {'id': id, 'status': status},
             dataType: 'JSON',
             success: function(result) {
-                window.location.reload();
+                swal({
+                    title: result['title'],
+                    type: result['icon'],
+                    text: result['message'],
+                    confirmButtonText: "Okay",
+                },
+                function(isConfirm){
+                    if (isConfirm) {
+                        if (result['icon'] == 'error'){
+                        }
+                        else{
+                            window.location.reload();
+                        }
+                    }
+                });
             },
             error: function(obj, err, ex){
                 swal("Server Error", err + ": " + obj.toString() + " " + ex, "error");

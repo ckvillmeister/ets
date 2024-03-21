@@ -62,6 +62,21 @@
                                 <h2><b>{{ $document->description }}</b></h2>
                             </div>
 
+                            @if ($document->sender)
+                            <div class="form-group">
+                                <label>Sender</label>
+                                <h2><b>{{ $document->sender }}&nbsp;{{ ($document->datetimesent) ? '(Date Sent: '.date('F d, Y @ h:i A', strtotime($document->datetimesent)).')' : '' }}</b></h2>
+                            </div>
+                            @endif
+
+                            @if ($document->recipient)
+                            <div class="form-group">
+                                <label>Recipient</label>
+                                <h2><b>{{ $document->recipient }}&nbsp;{{ ($document->datetimereceived) ? '(Date Received: '.date('F d, Y @ H:i A', strtotime($document->datetimereceived)).')' : '' }}</b></h2>
+                            </div>
+                            @endif
+
+
                             <div class="form-group">
                                 <label>Category</label>
                                 <h2><b>{{ $category }}</b></h2>
@@ -69,7 +84,7 @@
 
                             <div class="form-group">
                                 <label>Date Created</label>
-                                <h2><b>{{ $document->doc_date }}</b></h2>
+                                <h2><b>{{ date('F d, Y', strtotime($document->doc_date)) }}</b></h2>
                             </div>
 
                             <div class="form-group">

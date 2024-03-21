@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
@@ -41,15 +42,23 @@ class PermissionController extends Controller
 
         if ($id){
             
-            Permission::where('id', $id)->update(['name' => $request->input('name')]);
+            Permission::where('id', $id)->update(['name' => $request->input('name'),
+                                                    'updated_at' => date('Y-m-d H:i:s')
+                                            ]);
             return ['icon'=>'success',
                     'title'=>'Success',
                     'message'=>"Permission successfully updated!"];
         }
         else{
-            $request->validate([
+            $validator = Validator::make($request->all(), [
                 'name' => 'required|unique:permissions,name'
             ]);
+
+            if ($validator->fails()){
+                return ['icon'=>'error',
+                    'title'=>'Error',
+                    'message'=> $validator->errors()->first('name')];
+            }
     
             Permission::create($request->all() + ['guard_name' => Auth::getDefaultDriver()]);
             return ['icon'=>'success',

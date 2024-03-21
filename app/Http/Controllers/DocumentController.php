@@ -44,7 +44,7 @@ class DocumentController extends Controller
 
     function store(Request $request){
         $id = ($request->input('id')) ? $request->input('id') : null;
-        $attachments = ($request->input('attachments')) ? explode(",", $request->input('attachments')) : null;
+        $attachments = ($request->input('attachments')) ? explode(",", $request->input('attachments')) : [];
         $category = ($request->input('category')) ? $request->input('category') : null;
         $series = ($request->input('series')) ? $request->input('series') : null;
         $title = ($request->input('title')) ? $request->input('title') : null;
@@ -70,6 +70,15 @@ class DocumentController extends Controller
                     'created_at' => date('Y-m-d H:i:s')
                 ])->id;
                 Storage::disk('local')->putFileAs('/', $file, $filename.'.'.$extension);
+
+                $file = File::create([
+                    'filename' => $filename.'.'.$extension,
+                    'type' => $extension,
+                    'created_by' => Auth::id(),
+                    'created_at' => date('Y-m-d H:i:s')
+                ]);
+
+                array_push($attachments, $file->id);
             }
         }
 
@@ -85,7 +94,7 @@ class DocumentController extends Controller
                                                 'recipient' => $recipient,
                                                 'datetimereceived' => $datetimereceived,
                                                 'updated_by' => Auth::id(),
-                                                'updated_at' => date("Y-m-d")
+                                                'updated_at' => date('Y-m-d H:i:s')
                                                 ]);
             Attachments::where('document_id', $id)->delete();
 
@@ -98,7 +107,7 @@ class DocumentController extends Controller
             return ['icon'=>'success', 
                             'title'=>'Success',
                             'message'=>"Document successfully updated!",
-                            'url' => $id];
+                            'id' => $id];
         }
         else{
             $document = Document::create($request->all() + ['created_by' => Auth::id()]);

@@ -36,7 +36,7 @@
         <div class="col-sm-6">
             <div class="card">
                 <div class="card-header">
-                    <h3>Documents Created per Month</h3>
+                    <h3>Documents Created per Month ({{ date('Y')}})</h3>
                 </div>
                 <div class="card-body" id="content">
                     <div class="chart-container">

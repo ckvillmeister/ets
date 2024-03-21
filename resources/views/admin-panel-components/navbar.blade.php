@@ -2,8 +2,8 @@
     <!-- Logo Header -->
     <div class="logo-header" data-background-color="blue">
         
-        <a href="index.html" class="logo">
-            <img src="{{ asset('atlantis/assets/img/logo.svg') }}" alt="{{ config('app.name') }}" class="navbar-brand">
+        <a href="{{ route('dashboard') }}" class="logo" style="color: white">
+            <img src="{{ asset('images/navbar-header.png') }}" alt="{{ config('app.name') }}" class="navbar-brand mr-2" style="height: 50px">
         </a>
         <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon">
@@ -225,14 +225,14 @@
                 <li class="nav-item dropdown hidden-caret">
                     <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
                         <div class="avatar-sm">
-                            <img src="{{ asset('atlantis/assets/img/profile.jpg') }}" alt="..." class="avatar-img rounded-circle">
+                            <img src="{{ asset('images/avatar.png') }}" alt="..." class="avatar-img rounded-circle">
                         </div>
                     </a>
                     <ul class="dropdown-menu dropdown-user animated fadeIn">
                         <div class="dropdown-user-scroll scrollbar-outer">
                             <li>
                                 <div class="user-box">
-                                    <div class="avatar-lg"><img src="{{ asset('atlantis/assets/img/profile.jpg') }}" alt="image profile" class="avatar-img rounded"></div>
+                                    <div class="avatar-lg"><img src="{{ asset('images/avatar.png') }}" alt="image profile" class="avatar-img rounded"></div>
                                     <div class="u-text">
                                         <h4>{{ Auth::user()->firstname.' '.Auth::user()->lastname }}</h4>
                                         <p class="text-muted">{{ Auth::user()->roles()->first()->name }}</p>

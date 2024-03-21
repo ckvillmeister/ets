@@ -79,7 +79,9 @@
                 },
                 function(isConfirm){
                     if (isConfirm) {
-                        getRoles(1);
+                        if (result['icon'] == 'success'){
+                            getRoles(1);
+                        }
                     }
                 });
             },

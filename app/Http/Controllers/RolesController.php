@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Permission;
@@ -39,10 +40,12 @@ class RolesController extends Controller
     public function store(Request $request)
     {   
         $id = $request->input('id');
-        $permissions = explode(",", $request->input('permissions'));
+        $permissions = $request->input('permissions') ? explode(",", $request->input('permissions')) : null;
 
         if ($id){
-            Role::where('id', $id)->update(['name' => $request->input('name')]);
+            Role::where('id', $id)->update(['name' => $request->input('name'),
+                                                'updated_at' => date('Y-m-d H:i:s')
+                                            ]);
             $role = Role::find($id);
             
             RoleHasPermissions::where('role_id', $id)->delete();
@@ -56,15 +59,24 @@ class RolesController extends Controller
                     'message'=>"Role successfully updated!"];
         }
         else{
-            $request->validate([
+            $validator = Validator::make($request->all(), [
                 'name' => 'required|unique:roles,name'
             ]);
+
+            if ($validator->fails()){
+                return ['icon'=>'error',
+                    'title'=>'Error',
+                    'message'=> $validator->errors()->first()];
+            }
     
-            $role = Role::create($request->all() + ['guard_name' => Auth::getDefaultDriver()]);
-            foreach($permissions as $permission):
-                $perm = Permission::find($permission);
-                $role->givePermissionTo($perm->name);
-            endforeach;
+            $role = Role::create($request->except('updated_at') + ['guard_name' => Auth::getDefaultDriver()]);
+
+            if ($permissions):
+                foreach($permissions as $permission):
+                    $perm = Permission::find($permission);
+                    $role->givePermissionTo($perm->name);
+                endforeach;
+            endif;
 
             return ['icon'=>'success',
                     'title'=>'Success',

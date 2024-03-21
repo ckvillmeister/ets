@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
@@ -37,13 +39,20 @@ class UserController extends Controller
         $id = $request->input('id');
         
         if ($id){
-            $request->validate([
+            $validator = Validator::make($request->all(), [
                 'firstname' => 'required',
                 'lastname' => 'required',
                 'role' => 'required',
             ]);
 
-            $user = User::where('id', $id)->update($request->all());
+            if ($validator->fails()){
+                return ['icon'=>'error',
+                    'title'=>'Error',
+                    'message'=> $validator->errors()->first()];
+            }
+
+            $user = User::where('id', $id)->update($request->all() + ['updated_by' => Auth::id(),
+                                                                        'updated_at' => date('Y-m-d H:i:s')]);
             $user = User::where('id', $id)->first();
             $role = Role::where('id', $request->input('role'))->first();
             $user->assignRole($role);
@@ -53,13 +62,19 @@ class UserController extends Controller
                     'message'=>"User successfully updated!"];
         }
         else{
-            $request->validate([
+            $validator = Validator::make($request->all(), [
                 'firstname' => 'required',
                 'lastname' => 'required',
                 'username' => 'required|unique:users,username',
                 'password' => 'required',
                 'role' => 'required',
             ]);
+
+            if ($validator->fails()){
+                return ['icon'=>'error',
+                    'title'=>'Error',
+                    'message'=> $validator->errors()->first()];
+            }
     
             $user = User::create($request->all());
             $role = Role::where('id', $request->input('role'))->first();
