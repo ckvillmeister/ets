@@ -111,10 +111,10 @@
                         </li>
                     </ul>
                 </li> -->
-                <li class="nav-item dropdown hidden-caret">
+                <!-- <li class="nav-item dropdown hidden-caret">
                     <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-bell"></i>
-                        <span class="notification">4</span>
+                        <span class="notification notification-count"></span>
                     </a>
                     <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
                         <li>
@@ -122,45 +122,8 @@
                         </li>
                         <li>
                             <div class="notif-scroll scrollbar-outer">
-                                <div class="notif-center">
-                                    <a href="#">
-                                        <div class="notif-icon notif-primary"> <i class="fa fa-user-plus"></i> </div>
-                                        <div class="notif-content">
-                                            <span class="block">
-                                                New user registered
-                                            </span>
-                                            <span class="time">5 minutes ago</span> 
-                                        </div>
-                                    </a>
-                                    <a href="#">
-                                        <div class="notif-icon notif-success"> <i class="fa fa-comment"></i> </div>
-                                        <div class="notif-content">
-                                            <span class="block">
-                                                Rahmad commented on Admin
-                                            </span>
-                                            <span class="time">12 minutes ago</span> 
-                                        </div>
-                                    </a>
-                                    <a href="#">
-                                        <div class="notif-img"> 
-                                            <img src="{{ asset('atlantis/assets/img/profile2.jpg') }}" alt="Img Profile">
-                                        </div>
-                                        <div class="notif-content">
-                                            <span class="block">
-                                                Reza send messages to you
-                                            </span>
-                                            <span class="time">12 minutes ago</span> 
-                                        </div>
-                                    </a>
-                                    <a href="#">
-                                        <div class="notif-icon notif-danger"> <i class="fa fa-heart"></i> </div>
-                                        <div class="notif-content">
-                                            <span class="block">
-                                                Farrah liked Admin
-                                            </span>
-                                            <span class="time">17 minutes ago</span> 
-                                        </div>
-                                    </a>
+                                <div class="notif-center notification-list">
+
                                 </div>
                             </div>
                         </li>
@@ -168,7 +131,7 @@
                             <a class="see-all" href="javascript:void(0);">See all notifications<i class="fa fa-angle-right"></i> </a>
                         </li>
                     </ul>
-                </li>
+                </li> -->
                 <!-- <li class="nav-item dropdown hidden-caret">
                     <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
                         <i class="fas fa-layer-group"></i>
@@ -242,13 +205,14 @@
                             </li>
                             <li>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">My Profile</a>
+                                <!-- <a class="dropdown-item" href="#">My Profile</a>
                                 <a class="dropdown-item" href="#">My Balance</a>
-                                <a class="dropdown-item" href="#">Inbox</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Account Setting</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
+                                <a class="dropdown-item" href="#">Inbox</a> -->
+                              <!--   <div class="dropdown-divider"></div>
+                                
+                                <div class="dropdown-divider"></div> -->
+                                <a class="dropdown-item" href="{{ url('user/changepass') }}"><i class="fas fa-key mr-2"></i>Change Password</a>
+                                <a class="dropdown-item mt-2" href="{{ route('logout') }}"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
                             </li>
                         </div>
                     </ul>

@@ -37,6 +37,9 @@
         </div>
     </div>
     
+    <audio id="pop">
+      <source src="{{ asset('sound/notification.mp3') }}" type="audio/mpeg">
+    </audio>
 </body>
 <footer>
     <script src="{{ asset('atlantis/assets/js/core/jquery.3.2.1.min.js') }}"></script>
@@ -47,12 +50,60 @@
     <script src="{{ asset('atlantis/assets/js/atlantis.min.js') }}"></script>
     <script src="{{ asset('atlantis/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js') }}"></script>
     <script src="{{ asset('atlantis/assets/js/plugin/datatables/datatables.min.js') }}"></script>
+    <script src="{{ asset('atlantis/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js') }}"></script>
     <script src="{{ asset('adminbsb/plugins/bootstrap-select/js/bootstrap-select.js') }}"></script>
     <script src="{{ asset('adminbsb/plugins/jquery-slimscroll/jquery.slimscroll.js') }}"></script>
     <script src="{{ asset('adminbsb/plugins/node-waves/waves.js') }}"></script>
     <script src="{{ asset('adminbsb/plugins/sweetalert2/dist/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('adminbsb/plugins/sweetalert/sweetalert.min.js') }}"></script>
     <script src="{{ asset('adminbsb/plugins/upload-master/dist/ssi-uploader/js/ssi-uploader.min.js') }}"></script>
+    <script src="{{ asset('adminbsb/plugins/momentjs/moment.js') }}"></script>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <script>
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('18669f53ffa7e0c4529c', {
+          cluster: 'ap1'
+        });
+
+        var channel = pusher.subscribe('document-stored');
+        channel.bind('notif', function(data) {
+            var content = {};
+
+            content.title = 'Notification';
+            content.message = data['message'] + " (<b>" + moment().fromNow() + "</b>)";
+            content.icon = 'fa fa-bell';
+
+            $('audio#pop')[0].play();
+
+            $.notify(content,{
+                type: 'primary',
+                placement: {
+                    from: 'top',
+                    align: 'right'
+                },
+                time: 1000,
+                delay: 0,
+            });
+
+          //alert(JSON.stringify(data['message']));
+        });
+
+        function notif(){
+            $.ajax({
+                headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '/notifyl',
+                method: 'GET',
+                dataType: 'HTML',
+                success: function(result) {
+                    
+                }
+            })
+        }
+    </script>
     @stack('scripts')
 </footer>
 

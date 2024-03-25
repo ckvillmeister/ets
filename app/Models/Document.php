@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Attachments;
 use App\Models\Category;
 use App\Models\User;
+use App\Models\DocumentHistory;
 
 class Document extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
     protected $table = 'documents';
     protected $fillable = [
         'category',
@@ -40,5 +42,9 @@ class Document extends Model
 
     public function creator(){
         return $this->hasOne(User::class, 'id', 'created_by');
+    }
+
+    public function history_logs(){
+        return $this->hasMany(DocumentHistory::class, 'document_id', 'id');
     }
 }

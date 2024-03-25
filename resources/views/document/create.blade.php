@@ -278,6 +278,7 @@
 
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-primary waves-effect view-files-all"><i class="fas fa-spinner mr-2"></i>Retrieve All</button>
                 <button type="button" class="btn btn-sm btn-default waves-effect" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i>Close</button>
             </div>
         </div>
@@ -297,20 +298,11 @@
             keyboard: false
         });
 
-        $.ajax({
-            headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '{{ route("filelist") }}',
-            method: 'POST',
-            dataType: 'HTML',
-            success: function(result) {
-                $('#tbl-filelist').html(result);
-            },
-            error: function(obj, err, ex){
-                swal("Server Error", err + ": " + obj.toString() + " " + ex, "error");
-            }
-        })
+        viewFiles(50);        
+    });
+
+    $('.view-files-all').on('click', function(){
+        viewFiles(0);        
     });
 
     $('#table-list').on('click', '#remove-file', function(){
@@ -398,6 +390,31 @@
     $("#category").on('change', function(){
         toggleFields(this);
     });
+
+    function viewFiles(limit){
+        $.ajax({
+            headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: '{{ route("filelist") }}',
+            method: 'POST',
+            data: {'limit': limit},
+            dataType: 'HTML',
+            beforeSend: function() {
+                $('#tbl-filelist').html('<div class="progress" style="height: 13px;">' +
+                                    '<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 100%">' +
+                                    '<span class="sr-only">40% Complete (success)</span>' +
+                                    '</div>' +
+                                    '</div>');
+            },
+            success: function(result) {
+                $('#tbl-filelist').html(result);
+            },
+            error: function(obj, err, ex){
+                swal("Server Error", err + ": " + obj.toString() + " " + ex, "error");
+            }
+        })
+    }
 
     function toggleFields(select){
     //$('#category').on('change', function(){

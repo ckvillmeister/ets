@@ -1,5 +1,5 @@
-<div class="table-responsive">
-    <table class="display table table-striped table-hover dataTable" id="table-list">
+<div class="table-responsive mt-3">
+    <table class="display table table-striped table-hover dataTable" id="table-list" style="width: 100%">
         <thead>
             <tr>
                 <th class="text-center">No</th>
@@ -25,3 +25,17 @@
         </tbody>
     </table>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var tbl = $('#table-list').DataTable({
+            "dom": 'Brt',
+            "buttons": ['print', 'excel', 'pdf'],
+            "scrollX": true,
+            "ordering": false,
+            "paging": false
+        });
+    });
+</script>
+
+

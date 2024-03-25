@@ -2,7 +2,7 @@
 @section('content')
 
 <style>
-    img:hover {
+    .gallery img:hover {
         cursor: -moz-zoom-in; 
         cursor: -webkit-zoom-in; 
         cursor: zoom-in;
@@ -44,7 +44,7 @@
                 <div class="card-body" id="content">
                     
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                             @if ($document->series)
                             <div class="form-group">
                                 <label>No.</label>
@@ -92,41 +92,81 @@
                             </div>
 
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Attachments</label>
+                        <div class="col-sm-7">
+                            <ul class="nav nav-pills nav-secondary" id="pills-tab" role="tablist">
+                                <li class="nav-item submenu">
+                                    <a class="nav-link active show" id="pills-attachments-tab" data-toggle="pill" href="#pills-attachments" role="tab" aria-controls="pills-attachments" aria-selected="true">Attachments</a>
+                                </li>
+                                <li class="nav-item submenu">
+                                    <a class="nav-link" id="pills-logs-tab" data-toggle="pill" href="#pills-logs" role="tab" aria-controls="pills-logs" aria-selected="false">Logs</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content mt-2 mb-3" id="pills-tabContent">
+                                <div class="tab-pane fade active show" id="pills-attachments" role="tabpanel" aria-labelledby="pills-attachments-tab">
+                                     <!-- <div class="form-group">
+                                        <label>Attachments</label>
+                                    </div> -->
+
+                                    <div class="row gallery">
+                                    @php ($index = 0)
+                                    @php ($attachments = $document->attachments) 
+                                    @foreach ($attachments as $attachment)
+                                        @php ($path='files/'.$attachment->info()->first()->filename)
+                                        @php ($type=$attachment->info()->first()->type)
+                                            
+                                            <div class="col-md-5">
+                                                <div class="card border-0 transform-on-hover">
+                                                    <a class="lightbox" href="#">
+                                                        
+                                                    </a>
+                                                    <div class="card-body">
+                                                        @if (in_array($type,  ['jpg', 'jpeg', 'png', 'bmp', 'gif']))
+                                                            <img src="{{ asset($path) }}" class="card-img-top" style="height: 150px" data-file="image" data-index="{{ $index++ }}">
+                                                        @elseif ($type == 'pdf')
+                                                            <div class="text-center">
+                                                                <i class="far fa-file-pdf pt-4" style="height: 150px; font-size: 80pt"></i>
+                                                            </div>
+                                                        @elseif ($type == 'docx')
+                                                            <div class="text-center">
+                                                                <i class="far fa-file-word pt-4" style="height: 150px; font-size: 80pt"></i>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        
+                                    @endforeach
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="pills-logs" role="tabpanel" aria-labelledby="pills-logs-tab">
+                                    
+                                    <table class="table table-xs table-hover table-striped table-condensed" id="tbl" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">No</th>
+                                                <th class="text-center">Action</th>
+                                                <th class="text-center">Created / Modified By</th>
+                                                <th class="text-center">Date Created / Modified</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table-filelist">
+                                            @php ($ctr = 1)
+                                            @foreach ($document->history_logs as $logs)
+                                            <tr class="text-center">
+                                                <td class="text-center">{{ $ctr++ }}</td>
+                                                <td class="text-center td-image">
+                                                    {{ \App\Enums\Actions::$actions[$logs->action] }}
+                                                </td>
+                                                <td>{{ $logs->executor()->first()->firstname.' '.$logs->executor()->first()->lastname }}</td>
+                                                <td>{{ date('F d, Y h:i A', strtotime($logs->execution_date)) }}</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+
+                                    </table>
+                                </div>
                             </div>
 
-                            <div class="row gallery">
-                            @php ($index = 0)
-                            @php ($attachments = $document->attachments) 
-                            @foreach ($attachments as $attachment)
-                                @php ($path='files/'.$attachment->info()->first()->filename)
-                                @php ($type=$attachment->info()->first()->type)
-                                    
-                                    <div class="col-md-5">
-                                        <div class="card border-0 transform-on-hover">
-                                            <a class="lightbox" href="#">
-                                                
-                                            </a>
-                                            <div class="card-body">
-                                                @if (in_array($type,  ['jpg', 'jpeg', 'png', 'bmp', 'gif']))
-                                                    <img src="{{ asset($path) }}" class="card-img-top" style="height: 150px" data-file="image" data-index="{{ $index++ }}">
-                                                @elseif ($type == 'pdf')
-                                                    <div class="text-center">
-                                                        <i class="far fa-file-pdf pt-4" style="height: 150px; font-size: 80pt"></i>
-                                                    </div>
-                                                @elseif ($type == 'docx')
-                                                    <div class="text-center">
-                                                        <i class="far fa-file-word pt-4" style="height: 150px; font-size: 80pt"></i>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                
-                            @endforeach
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -152,11 +192,11 @@
             initMaximized: true
         };
 
-        console.log(options);
+        //console.log(options);
 
         $(".gallery img").each(function() {  
             imgsrc = this.src;
-            console.log(imgsrc);
+            //console.log(imgsrc);
             items.push({
                 src: imgsrc
             });

@@ -84,7 +84,20 @@
 </div>
 
 @endsection
+
+
 @push('scripts')
+<script src="{{ asset('atlantis/assets/js/plugin/buttons/js/jquery.js') }}"></script>
+<script src="{{ asset('atlantis/assets/js/plugin/buttons/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('atlantis/assets/js/plugin/buttons/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('atlantis/assets/js/plugin/buttons/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('atlantis/assets/js/plugin/buttons/js/buttons.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('atlantis/assets/js/plugin/buttons/js/jszip.min.js') }}"></script>
+<script src="{{ asset('atlantis/assets/js/plugin/buttons/js/pdfmake.min.js') }}"></script>
+<script src="{{ asset('atlantis/assets/js/plugin/buttons/js/vfs_fonts.js') }}"></script>
+<script src="{{ asset('atlantis/assets/js/plugin/buttons/js/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('atlantis/assets/js/plugin/buttons/js/buttons.print.min.js') }}"></script>
+<script src="{{ asset('atlantis/assets/js/plugin/buttons/js/buttons.colVis.min.js') }}"></script>
 <script>
     $('.generate-report').on('click', function(){
         var category = $('#category').val(),

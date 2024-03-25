@@ -95,7 +95,7 @@ class UserController extends Controller
 
     public function resetPassword($action, Request $request)
     {   
-        if ($action == 'resetForm'):
+        if ($action):
             $id = $request->input('id');
             $user = User::where('id', $id)->first();
             return view('user.resetpass', ['user' => $user]);
@@ -106,6 +106,38 @@ class UserController extends Controller
                     'title'=>'Success',
                     'message'=>"Password reset successfully!"];
         endif;
+        
+    }
+
+    public function changePassword(Request $request)
+    {
+        $id = Auth::id();
+        $opassword = ($request->input('opassword')) ? $request->input('opassword') : null;
+        $password = ($request->input('password')) ? $request->input('password') : null;
+        $password_confirmation = ($request->input('password_confirmation')) ? $request->input('password_confirmation') : null;
+
+        
+        if ($password){
+            if (!Hash::check($opassword, Auth::user()->password)){
+                return ['icon'=>'error',
+                        'title'=>'Error',
+                        'message'=>"Old password entered is incorrect!"];
+            }
+            elseif ($password != $password_confirmation){
+                return ['icon'=>'error',
+                        'title'=>'Error',
+                        'message'=>"Password does not match!"];
+            }
+            else{
+                User::where('id', $id)->update(['password' => Hash::make($password)]);
+                return ['icon'=>'success',
+                        'title'=>'Success',
+                        'message'=>"Password successfully changed!"];
+            }
+        }
+        else{
+            return view('user.changepass');
+        }
         
     }
 }

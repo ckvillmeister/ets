@@ -69,7 +69,16 @@ class FileController extends Controller
     }
 
     function getFiles(Request $request){
-        $files = File::orderBy('id', 'DESC')->get();
+        $limit = ($request->input('limit')) ? $request->input('limit') : null;
+        $files;
+        
+        if ($limit){
+            $files = File::orderBy('id', 'DESC')->take($limit)->get();
+        }
+        else{
+            $files = File::orderBy('id', 'DESC')->get();
+        }
+        
         $path  = Storage::disk('local')->path('');
 
         return view('document.filelist', ['files' => $files, 'path' => $path]);

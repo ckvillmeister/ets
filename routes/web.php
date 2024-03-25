@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\DashboardController;
@@ -14,6 +15,8 @@ use App\Http\Controllers\RolesController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+
+use App\Events\DocumentStored;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions');
     Route::get('/roles', [RolesController::class, 'index'])->name('roles');
     Route::get('/user', [UserController::class, 'index'])->name('user');
+    Route::get('/user/changepass', [UserController::class, 'changePassword']);
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     
     Route::get('/entity/new', [EntityController::class, 'create'])->name('new-entity');
@@ -90,5 +94,8 @@ Route::post('/userCreate', [UserController::class, 'create']);
 Route::post('/userStore', [UserController::class, 'store']);
 Route::post('/userToggleStatus', [UserController::class, 'toggleStatus']);
 Route::post('/userResetPass/{action}', [UserController::class, 'resetPassword']);
+Route::post('/user/change/password', [UserController::class, 'changePassword']);
+
+Route::get('/notify', [NotificationController::class, 'notify']);
 
 require __DIR__.'/auth.php';

@@ -7,13 +7,17 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
+use App\Enums\Actions;
 use App\Models\Document;
 use App\Models\Category;
 use App\Models\File;
 use App\Models\Attachments;
+use App\Models\DocumentHistory;
+use App\Events\DocumentStored;
 
 class DocumentController extends Controller
 {
+
     function index(Request $request){
         if (! Gate::allows('View Document Manager')) {
             abort(403);
@@ -26,7 +30,8 @@ class DocumentController extends Controller
             $documents = Document::where('status', $status)
                                 ->when($search, function($query) use ($search){
                                     $query->where('title', 'LIKE', '%'.$search.'%')
-                                            ->orWhere('description', 'LIKE', '%'.$search.'%');
+                                            ->orWhere('description', 'LIKE', '%'.$search.'%')
+                                            ->orWhere('series', 'LIKE', '%'.$search.'%');
                                 })->paginate(12);
         else:
             $documents = Document::where('status', $status)->paginate(12);
@@ -54,23 +59,15 @@ class DocumentController extends Controller
         $datetimesent = ($request->input('datetimesent')) ? $request->input('datetimesent') : null;
         $recipient = ($request->input('recipient')) ? $request->input('recipient') : null;
         $datetimereceived = ($request->input('datetimereceived')) ? $request->input('datetimereceived') : null;
-        
+        $fullname = Auth::user()->firstname.' '.Auth::user()->lastname;
         $files = ($request->files) ? $request->files : null;
-        $saved_files = [];
         
         if ($files){
             foreach($files as $file){
                 $extension = $file->getClientOriginalExtension();
                 $filename = date('Y_m_d_H_i_s_'.substr((string)microtime(), 2, 4));
                 
-                $saved_files[] = File::create([
-                    'filename' => $filename.'.'.$extension,
-                    'type' => $extension,
-                    'created_by' => Auth::id(),
-                    'created_at' => date('Y-m-d H:i:s')
-                ])->id;
                 Storage::disk('local')->putFileAs('/', $file, $filename.'.'.$extension);
-
                 $file = File::create([
                     'filename' => $filename.'.'.$extension,
                     'type' => $extension,
@@ -104,6 +101,14 @@ class DocumentController extends Controller
                 endforeach;
             }
 
+            DocumentHistory::create(['document_id' => $id, 
+                                        'action' =>  2,
+                                        'executed_by' => Auth::id(),
+                                        'execution_date' => date('Y-m-d H:i:s')
+                                        ]);
+
+            event(new DocumentStored($fullname, 'updated'));
+
             return ['icon'=>'success', 
                             'title'=>'Success',
                             'message'=>"Document successfully updated!",
@@ -117,6 +122,16 @@ class DocumentController extends Controller
                     Attachments::create(['document_id' => $document->id, 'file_id' =>$attachment]);
                 endforeach;
             }
+
+            DocumentHistory::create(['document_id' => $document->id, 
+                                        'action' =>  1,
+                                        'executed_by' => Auth::id(),
+                                        'execution_date' => date('Y-m-d H:i:s')
+                                        ]);
+
+    
+
+            event(new DocumentStored($fullname, 'created'));
 
             return ['icon'=>'success', 
                             'title'=>'Success',
@@ -136,7 +151,7 @@ class DocumentController extends Controller
 
     function view(Request $request){
         $id = $request->input('id');
-        $document = Document::with(['category', 'attachments.info'])->find($id);
+        $document = Document::with(['category', 'attachments.info', 'history_logs.executor'])->find($id);
         return view('document.view', ['document' => $document]);
     }
 }
