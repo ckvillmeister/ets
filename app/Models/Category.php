@@ -12,6 +12,9 @@ class Category extends Model
     protected $table = 'category';
     protected $fillable = [
         'category',
+        'is_with_series_no',
+        'is_with_sender',
+        'is_with_receiver',
         'created_by',
         'created_at',
         'updated_by',

@@ -36,9 +36,9 @@ class CategoryController extends Controller
     public function store(Request $request)
     {   
         $id = $request->input('id');
-        $seriesno = ($request->input('is_with_series_no')) ? $request->input('is_with_series_no') : null;
-        $sender = ($request->input('is_with_sender')) ? $request->input('is_with_sender') : null;
-        $recipient = ($request->input('is_with_receiver')) ? $request->input('is_with_receiver') : null;
+        $seriesno = ($request->input('is_with_series_no')) ? intval($request->input('is_with_series_no')) : null;
+        $sender = ($request->input('is_with_sender')) ? intval($request->input('is_with_sender')) : null;
+        $recipient = ($request->input('is_with_receiver')) ? intval($request->input('is_with_receiver')) : null;
 
         if ($id){
             Category::where('id', $id)->update(['category' => $request->input('category'),

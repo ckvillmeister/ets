@@ -112,7 +112,7 @@
                                         <span class="input-icon-addon">
                                             <i class="fas fa-info-circle"></i>
                                         </span>
-                                        <input type="text" class="form-control" id="description" name="description" value="{{ ($document) ? $document->description : '' }}" placeholder="Description" required>
+                                        <input type="text" class="form-control" id="description" name="description" value="{{ ($document) ? $document->description : '' }}" placeholder="Description">
                                     </div>
                                     <label class="error" for="title">{{ $errors->first('description') }}</label>
                                 </div>
@@ -419,9 +419,9 @@
     function toggleFields(select){
     //$('#category').on('change', function(){
         var category = $("option:selected", select).text().trim(),
-            series = $("option:selected", select).attr('data-no'),
-            sender = $("option:selected", select).attr('data-sender'),
-            recipient = $("option:selected", select).attr('data-receiver');
+            series = parseInt($("option:selected", select).attr('data-no')),
+            sender = parseInt($("option:selected", select).attr('data-sender')),
+            recipient = parseInt($("option:selected", select).attr('data-receiver'));
        
         if (series){
             $('#number-series').show();
