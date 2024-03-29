@@ -47,6 +47,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/user', [UserController::class, 'index'])->name('user');
     Route::get('/user/changepass', [UserController::class, 'changePassword']);
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+    Route::get('/settings/backupdb', [SettingsController::class, 'backupBD'])->name('backup-db');
+    Route::get('/settings/backupfiles', [SettingsController::class, 'backupFiles'])->name('backup-files');
     
     Route::get('/entity/new', [EntityController::class, 'create'])->name('new-entity');
     Route::post('/entity/store', [EntityController::class, 'store'])->name('store-entity');
@@ -95,7 +97,5 @@ Route::post('/userStore', [UserController::class, 'store']);
 Route::post('/userToggleStatus', [UserController::class, 'toggleStatus']);
 Route::post('/userResetPass/{action}', [UserController::class, 'resetPassword']);
 Route::post('/user/change/password', [UserController::class, 'changePassword']);
-
-Route::get('/notify', [NotificationController::class, 'notify']);
 
 require __DIR__.'/auth.php';

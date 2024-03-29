@@ -115,22 +115,25 @@
                                         @php ($type=$attachment->info()->first()->type)
                                             
                                             <div class="col-md-5">
-                                                <div class="card border-0 transform-on-hover">
-                                                    <a class="lightbox" href="#">
-                                                        
-                                                    </a>
+                                                <div class="card border-0 transform-on-hover" style="height: 400px !important">
                                                     <div class="card-body">
-                                                        @if (in_array($type,  ['jpg', 'jpeg', 'png', 'bmp', 'gif']))
-                                                            <img src="{{ asset($path) }}" class="card-img-top" style="height: 150px" data-file="image" data-index="{{ $index++ }}">
-                                                        @elseif ($type == 'pdf')
-                                                            <div class="text-center">
-                                                                <i class="far fa-file-pdf pt-4" style="height: 150px; font-size: 80pt"></i>
-                                                            </div>
-                                                        @elseif ($type == 'docx')
-                                                            <div class="text-center">
-                                                                <i class="far fa-file-word pt-4" style="height: 150px; font-size: 80pt"></i>
-                                                            </div>
-                                                        @endif
+                                                        <a class="lightbox" href="#">
+                                                            @if (in_array($type,  ['jpg', 'jpeg', 'png', 'bmp', 'gif']))
+                                                                <img src="{{ asset($path) }}" class="card-img-top" data-file="image" data-index="{{ $index++ }}">
+                                                            @elseif ($type == 'pdf')
+                                                                <div class="text-center">
+                                                                    <i class="far fa-file-pdf pt-4" style="height: 150px; font-size: 80pt"></i>
+                                                                </div>
+                                                            @elseif ($type == 'docx')
+                                                                <div class="text-center">
+                                                                    <i class="far fa-file-word pt-4" style="height: 150px; font-size: 80pt"></i>
+                                                                </div>
+                                                            @endif
+                                                        </a>
+                                                    </div>
+                                                    <div class="card-footer text-center">
+                                                        <button class="btn btn-sm btn-primary waves-effect" data-url="{{ asset($path) }}" title="Print File" role="button" onclick="print()"><i class="fas fa-print mr-2"></i>Print
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -182,6 +185,22 @@
 @push('scripts')
 <script src="{{ asset('adminbsb/plugins/photoviewer-master/dist/photoviewer.min.js') }}"></script>
 <script>
+    function print() {
+        var title = "{{ $document->title }}";
+        var url = $(event.target).attr('data-url');  
+
+        var mywindow = window.open('', title, 'height=800,width=1020,scrollbars=yes');
+          mywindow.document.write('<html><head>');
+          mywindow.document.write('<title>'+title+'</title>');
+          mywindow.document.write('</head><body>');
+          mywindow.document.write('<center><img src="'+url+'" style="width: 650px"></center>');
+          mywindow.document.write('</body></html>');
+          mywindow.document.close();
+          setTimeout(function(){
+              mywindow.focus();
+              mywindow.print();    
+          },1000);           
+    }     
     
     $('[data-file=image]').click(function (e) {
         e.preventDefault();

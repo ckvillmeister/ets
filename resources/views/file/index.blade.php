@@ -1,5 +1,13 @@
 @extends('index')
 @section('content')
+<style type="text/css">
+    .filename {
+        white-space: nowrap; 
+        width: calc(100%);
+        overflow: hidden;
+        text-overflow: ellipsis; 
+    }
+</style>
 <div class="page-inner">
     <div class="panel-header">
         <div class="page-header">
@@ -68,27 +76,29 @@
                                     @foreach ($files as $file)
                                         @php ($path='files/'.$file->filename)
                                     <div class="col-md-2">
-                                        <div class="card border-0 transform-on-hover">
-                                            <a class="lightbox" href="#">
-                                                @if (in_array($file->type,  ['jpg', 'jpeg', 'png', 'bmp', 'gif']))
-                                                    <img src="{{ asset($path) }}" class="card-img-top" style="height: 150px" data-file="image" data-index="{{ $index++ }}">
-                                                @elseif ($file->type == 'pdf')
-                                                    <div class="text-center">
-                                                        <i class="far fa-file-pdf pt-4" style="height: 150px; font-size: 80pt"></i>
-                                                    </div>
-                                                @elseif ($file->type == 'docx')
-                                                    <div class="text-center">
-                                                        <i class="far fa-file-word pt-4" style="height: 150px; font-size: 80pt"></i>
-                                                    </div>
-                                                @endif
-                                            </a>
+                                        <div class="card border-0 transform-on-hover" style="height: 350px !important">
                                             <div class="card-body">
-                                                <h6>Filename: <a href="#">{{ $file->filename }}</a></h6>
-                                                <p class="text-muted card-text">@if ($file->status)
-                                                    <button class="btn btn-sm btn-danger waves-effect" title="Delete File" role="button" onclick="deleteFile({{ $file->id }})"><i class="fas fa-trash-alt mr-2"></i>Delete</button>
-                                                    @else
-                                                    <button class="btn btn-sm btn-success waves-effect" title="Restore File" role="button" onclick="restoreFile({{ $file->id }})"><i class="fas fa-undo-alt mr-2"></i>Restore</button>
-                                                    @endif</p>
+                                                <a class="lightbox" href="#">
+                                                    @if (in_array($file->type,  ['jpg', 'jpeg', 'png', 'bmp', 'gif']))
+                                                        <img src="{{ asset($path) }}" class="card-img-top" data-file="image" data-index="{{ $index++ }}">
+                                                    @elseif ($file->type == 'pdf')
+                                                        <div class="text-center">
+                                                            <i class="far fa-file-pdf pt-4" style="height: 150px; font-size: 80pt"></i>
+                                                        </div>
+                                                    @elseif ($file->type == 'docx')
+                                                        <div class="text-center">
+                                                            <i class="far fa-file-word pt-4" style="height: 150px; font-size: 80pt"></i>
+                                                        </div>
+                                                    @endif
+                                                </a>
+                                            </div>
+                                            <div class="card-footer text-center">
+                                                <b>Filename: <h6 class="filename"><a href="#">{{ $file->filename }}</a></h6></b>
+                                                @if ($file->status)
+                                                <button class="btn btn-sm btn-danger waves-effect" title="Delete File" role="button" onclick="deleteFile({{ $file->id }})"><i class="fas fa-trash-alt mr-2"></i>Delete</button>
+                                                @else
+                                                <button class="btn btn-sm btn-success waves-effect" title="Restore File" role="button" onclick="restoreFile({{ $file->id }})"><i class="fas fa-undo-alt mr-2"></i>Restore</button>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
