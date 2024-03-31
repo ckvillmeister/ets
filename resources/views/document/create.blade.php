@@ -121,26 +121,14 @@
                         <div class="row clearfix" id="sender-field">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <b>Sender:</b>
+                                    <b>From / For:</b>
                                     <div class="input-icon">
                                         <span class="input-icon-addon">
                                             <i class="fas fa-user-tie"></i>
                                         </span>
-                                        <input type="text" class="form-control" id="sender" name="sender" value="{{ ($document) ? $document->sender : '' }}" placeholder="Sender">
+                                        <input type="text" class="form-control" id="sender" name="sender" value="{{ ($document) ? $document->sender : '' }}" placeholder="From / For">
                                     </div>
                                     <label class="error" for="sender">{{ $errors->first('sender') }}</label>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <b>Date and Time Sent:</b>
-                                    <div class="input-icon">
-                                        <span class="input-icon-addon">
-                                            <i class="far fa-calendar-alt"></i>
-                                        </span>
-                                        <input type="datetime-local" class="form-control" id="datetimesent" name="datetimesent" value="{{ ($document) ? $document->datetimesent : '' }}" placeholder="From">
-                                    </div>
-                                    <label class="error" for="datetimesent">{{ $errors->first('datetimesent') }}</label>
                                 </div>
                             </div>
                         </div>
@@ -148,12 +136,12 @@
                         <div class="row clearfix" id="recipient-field">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <b>Recipient:</b>
+                                    <b>Received by:</b>
                                     <div class="input-icon">
                                         <span class="input-icon-addon">
                                             <i class="fas fa-user-tie"></i>
                                         </span>
-                                        <input type="text" class="form-control" id="recipient" name="recipient" value="{{ ($document) ? $document->recipient : '' }}" placeholder="Recipient">
+                                        <input type="text" class="form-control" id="recipient" name="recipient" value="{{ ($document) ? $document->recipient : '' }}" placeholder="Received by">
                                     </div>
                                     <label class="error" for="recipient">{{ $errors->first('recipient') }}</label>
                                 </div>
@@ -165,7 +153,7 @@
                                         <span class="input-icon-addon">
                                             <i class="far fa-calendar-alt"></i>
                                         </span>
-                                        <input type="datetime-local" class="form-control" id="datetimereceived" name="datetimereceived" value="{{ ($document) ? $document->datetimereceived : '' }}" placeholder="To">
+                                        <input type="datetime-local" class="form-control" id="datetimereceived" name="datetimereceived" value="{{ ($document) ? $document->datetimereceived : date('Y-m-d h:i:s') }}" placeholder="To">
                                     </div label class="error" for="datetimereceived">{{ $errors->first('datetimereceived') }}</label>
                                 </div>
                             </div>
@@ -440,6 +428,8 @@
         }
 
         if (recipient){
+            var name = '{{ Auth::user()->firstname.' '.Auth::user()->lastname }}';
+            $('#recipient').val(name);
             $('#recipient-field').show();
         }
         else{

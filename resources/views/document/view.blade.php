@@ -35,6 +35,23 @@
     </div>
     <div class="row">
         <div class="col-sm-12">
+
+            @if(!$document)
+            <div class="row">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4">
+                    <div class="card-body cart zero-results">
+                        <div class="col-sm-12 empty-cart-cls text-center">
+                            <img src="{{ asset('images/empty.gif') }}" width="250" height="250" class="img-fluid mb-4 mr-3">
+                            <h3><strong>Document Not Found!</strong></h3>
+                            <h5>Are you sure you provided the correct document ID?</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4"></div>
+            </div>
+
+            @else
             <div class="card p-3">
                 <div class="card-header">
                     <h4><i class="fas fa-file mr-2"></i>Document Info</h4>
@@ -64,14 +81,14 @@
 
                             @if ($document->sender)
                             <div class="form-group">
-                                <label>Sender</label>
+                                <label>{{ (str_contains($category, 'Incoming')) ? 'From' : 'For' }}</label>
                                 <h2><b>{{ $document->sender }}&nbsp;{{ ($document->datetimesent) ? '(Date Sent: '.date('F d, Y @ h:i A', strtotime($document->datetimesent)).')' : '' }}</b></h2>
                             </div>
                             @endif
 
                             @if ($document->recipient)
                             <div class="form-group">
-                                <label>Recipient</label>
+                                <label>Received by:</label>
                                 <h2><b>{{ $document->recipient }}&nbsp;{{ ($document->datetimereceived) ? '(Date Received: '.date('F d, Y @ H:i A', strtotime($document->datetimereceived)).')' : '' }}</b></h2>
                             </div>
                             @endif
@@ -174,6 +191,8 @@
                     </div>
                 </div>
             </div>
+            @endif
+
         </div>
     </div>
 </div>
@@ -186,7 +205,7 @@
 <script src="{{ asset('adminbsb/plugins/photoviewer-master/dist/photoviewer.min.js') }}"></script>
 <script>
     function print() {
-        var title = "{{ $document->title }}";
+        var title = "{{ ($document) ? $document->title : '' }}";
         var url = $(event.target).attr('data-url');  
 
         var mywindow = window.open('', title, 'height=800,width=1020,scrollbars=yes');
